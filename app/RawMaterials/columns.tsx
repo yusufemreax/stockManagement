@@ -12,12 +12,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useRawMaterialModal } from "@/hooks/use-rawMaterial-modal"
-import { RawMaterialModal } from "@/components/modals/rawMaterial-modal"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-
-export const columns: ColumnDef<RawMaterial>[] = [
+interface ColumnProps{
+  handleModalSubmit: () => void;
+}
+export const columns = ({handleModalSubmit}: ColumnProps): ColumnDef<RawMaterial>[] => 
+{
+return [
   {
     id: "select",
     header: ({ table }) => (
@@ -60,21 +62,21 @@ export const columns: ColumnDef<RawMaterial>[] = [
     accessorKey: "sizeType",
     header: "Ağırlık İle",
     cell:({row}) =>{
-      const value:boolean = !row.getValue('sizeType');
+      const value:boolean = Boolean(row.getValue('sizeType'));
       return(
         <Checkbox
-          checked= {value}
+          checked= {!value}
         />
       )
     }
   },
   {
     accessorKey: "sizeType",
-    header: "Adet ile",
+    header: "Ağırlık İle",
     cell:({row}) =>{
-      const value:boolean = row.getValue('sizeType');
+      const value:boolean = Boolean(row.getValue('sizeType'));
       return(
-        <Checkbox 
+        <Checkbox
           checked= {value}
         />
       )
@@ -86,19 +88,6 @@ export const columns: ColumnDef<RawMaterial>[] = [
   },
   {
     id: "actions",
-    header:({column})=>{
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const useModal = useRawMaterialModal();
-      const openRawMaterialModal = () => {
-        useModal.onOpen();
-      };
-
-      return(
-        <Button variant={"outline"} size="icon">
-          <PlusIcon className="w-4 h-4" onClick={openRawMaterialModal}/>
-        </Button>
-      )
-    },
     cell: ({ row }) => {
       const storage = row.original
  
@@ -125,3 +114,4 @@ export const columns: ColumnDef<RawMaterial>[] = [
     },
   },
 ]
+}

@@ -1,16 +1,17 @@
 import {create} from "zustand";
-interface IuseRawMaterialModal{
+export interface IuseModal{
     isOpen:boolean;
-    onOpen: ()=>void;
-    onClose: (onCloseComplete?: ()=> void )=>void;
-    onCloseComplete: ()=> void;
+    onOpen: (handleCloseModal: ()=> void)=>void;
+    onClose: () =>void;
+    handleCloseModal:()=> void;
+    modalComponent: () => JSX.Element | null;
 }
-export const useRawMaterialModal = create<IuseRawMaterialModal>((set) => ({
+export const useModalForm = create<IuseModal>((set) => ({
     isOpen: false,
-    onOpen: () => set({isOpen: true}),
-    onClose: (onCloseComplete) => {
+    handleCloseModal: ()=> {},
+    onOpen: (handleCloseModal) => set({isOpen: true, handleCloseModal}),
+    onClose: () => {
         set({isOpen: false});
-        set({onCloseComplete: onCloseComplete || (()=> {})});
     },
-    onCloseComplete: ()=> {},
+    modalComponent: ()=> null,
 }))

@@ -1,9 +1,9 @@
 "use client"
 
-import { useRawMaterialModal } from "@/hooks/use-rawMaterial-modal"
+import { useModalForm } from "@/hooks/use-rawMaterial-modal"
 import { useForm } from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod"
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { Modal } from "../ui/modal";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
@@ -23,16 +23,31 @@ const formSchema = z.object({
     type: z.enum(["Direct","Production"]),
     sizeType: z.enum(["0","1"]),
 })
-
-export const RawMaterialModal = (handleCloseModal: () => void) =>{
-    const rawMaterialModal = useRawMaterialModal();
+interface RawMaterialModalProps {
+    modalData: RawMaterial | null;
+}
+export const RawMaterialModal: React.FC<RawMaterialModalProps> = ({modalData}) =>{
+    const rawMaterialModal = useModalForm();
     const [loading, setLoading] = useState(false);
+    /*const [formData, setFormData] = useState<RawMaterialModalProps["modalData"]>({});
+    useEffect(() => {
+        if (modalData) {
+        setFormData(modalData);
+        } else {
+        setFormData({
+            id: "",
+            name: "",
+            type: "Production",
+            sizeType: "0",
+        });
+        }
+    }, [modalData]);*/
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues:{
-            id:"",
-            name:"",
-            type:"Production",
+        defaultValues: {
+            id: "",
+            name: "",
+            type: "Production",
             sizeType: "0"
         },
     });
@@ -44,28 +59,27 @@ export const RawMaterialModal = (handleCloseModal: () => void) =>{
                 'Access-Control-Allow-Origin': 'http://localhost:3000' // Bu satırı ekleyin veya güncelleyin
             }});
             console.log(response.data);
-            rawMaterialModal.onClose(() => {
-                // Execute the callback when the modal is closed
-                rawMaterialModal.onCloseComplete();
-                // Call the handleCloseModal function from the DataTable component
-                handleCloseModal();
-              });
         } catch (error) {
             console.error('axioserror12' + error);
         }finally{
             setLoading(false);
-            rawMaterialModal.isOpen = false;
+            console.log("onclose öncesi");
+            
+            rawMaterialModal.onClose();
+            rawMaterialModal.handleCloseModal();
+            console.log("onclose sonrası");
         }
     };
-
-    
 
     return(
         <Modal
             title="Hammadde Detayı"
             description="Hammadde detaylarını giriniz"
             isOpen = {rawMaterialModal.isOpen}
-            onClose={rawMaterialModal.onClose}
+            onClose={() => {
+                rawMaterialModal.onClose();
+                console.log("onclose içi")
+            }}
             >
                 <div className="space-y-4 py-2 pb-4">
                     <Form {...form}>
@@ -106,7 +120,7 @@ export const RawMaterialModal = (handleCloseModal: () => void) =>{
                                             <FormControl>
                                                 <RadioGroup 
                                                     onValueChange={field.onChange}
-                                                    defaultValue={field.value.toString()} >
+                                                    defaultValue={field.value} >
                                                     <div className="flex flex-row w-full">
                                                         <div className="flex items-center space-x-2 mr-2">
                                                             <RadioGroupItem value= "0" id="isKg"/>
