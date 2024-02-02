@@ -86,52 +86,46 @@ export function DataTable<TData, TValue>({
             handleDeleteRows(table.getFilteredSelectedRowModel().rows.map(row => (row.original as any).id.toString()));
           }}
         >Seçili Olanları Sil</Button>
-        <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div>
+        
       </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-        //             <TableHead key={header.id}>
-        //   {header.isPlaceholder ? null : (
-        //     <div className="flex flex-col space-y-2 justify-start">
-        //       {flexRender(header.column.columnDef.header, header.getContext())}
-        //       <Input
-        //         placeholder={`Filter ${header.column.columnDef.header}`}
-        //         value={
-        //           (table.getColumn(header.id)?.getFilterValue() as string) ?? ""
-        //         }
-        //         onChange={(event) =>
-        //           table.getColumn(header.id)?.setFilterValue(event.target.value)
-        //         }
-        //         className="max-w-20"
-        //       />
-        //     </div>
-        //   )}
-        // </TableHead>
-                  )
-                })}
-              </TableRow>
+              <>
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      </TableHead>
+                    )
+                  })}
+                </TableRow>
+                <TableRow> {/* Yeni eklenen satır */}
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={`${header.id}-I`}>
+                      {header.isPlaceholder ? null : (
+                        <>
+                          { header.column.getCanFilter() &&
+                            <Input
+                              value={(header.column.getFilterValue() as string) ?? ""}
+                              placeholder="Filtre değeri"
+                              onChange={(event) =>
+                                header.column.setFilterValue(event.target.value)
+                              }
+                          />}
+                        </>
+                      )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </>
             ))}
           </TableHeader>
           <TableBody>

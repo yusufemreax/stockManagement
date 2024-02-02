@@ -70,7 +70,8 @@ return [
   },
   {
     accessorKey:"componentCount",
-    header:"Parça sayısı"
+    header:"Parça sayısı",
+    enableColumnFilter :false
   },
   {
     accessorKey:"supplierName",
