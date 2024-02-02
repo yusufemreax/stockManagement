@@ -1,6 +1,6 @@
 import { ModalProvider } from "@/providers/model-provider";
 
-export default function StorageLayout({
+export default function TransportsLayout({
     children,
 }: {
     children: React.ReactNode; 

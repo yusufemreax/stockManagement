@@ -24,6 +24,10 @@ const Sidebar: React.FC = () => {
       label: "Tedarikçiler"
     },
     {
+      href: "/SupplierStorage",
+      label: "Tedarikçi Ambarları"
+    },
+    {
       href: "/Productions",
       label: "Üretimler"
     },

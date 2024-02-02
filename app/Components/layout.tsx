@@ -7,7 +7,6 @@ export default function StorageLayout({
 }) {
     return (
         <div className="p-4">
-            
             {children}
         </div>)
 }

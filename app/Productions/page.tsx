@@ -8,6 +8,7 @@ import axios, { AxiosResponse } from 'axios'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import DoTable from './Table'
+import { ScrollArea } from '@/components/ui/scroll-area'
 const agent = new https.Agent({  
   rejectUnauthorized: false
 });
@@ -15,6 +16,8 @@ const agent = new https.Agent({
 // eslint-disable-next-line @next/next/no-async-client-component
 export default async function Home() {
   return(
-    <DoTable/>
+    <ScrollArea className='h-full overflow-y-auto pr-5'>
+        <DoTable/>
+      </ScrollArea>
   )
 }

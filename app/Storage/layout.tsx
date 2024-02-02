@@ -1,3 +1,5 @@
+import { ModalProvider } from "@/providers/model-provider";
+
 export default function StorageLayout({
     children,
 }: {
@@ -5,6 +7,7 @@ export default function StorageLayout({
 }) {
     return (
         <div className="p-4">
+            
             {children}
         </div>)
 }

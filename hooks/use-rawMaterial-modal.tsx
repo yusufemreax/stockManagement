@@ -1,17 +1,17 @@
 import {create} from "zustand";
 export interface IuseModal{
     isOpen:boolean;
-    onOpen: (handleCloseModal: ()=> void)=>void;
+    onOpen: (handleCloseModal: ()=> void,id:string | undefined)=>void;
     onClose: () =>void;
     handleCloseModal:()=> void;
-    modalComponent: () => JSX.Element | null;
+    id:string | undefined;
 }
 export const useModalForm = create<IuseModal>((set) => ({
     isOpen: false,
     handleCloseModal: ()=> {},
-    onOpen: (handleCloseModal) => set({isOpen: true, handleCloseModal}),
+    id:"",
+    onOpen: (handleCloseModal,id) => set({isOpen: true, handleCloseModal,id}),
     onClose: () => {
         set({isOpen: false});
     },
-    modalComponent: ()=> null,
 }))

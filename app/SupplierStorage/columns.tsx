@@ -18,7 +18,7 @@ interface ColumnProps{
   handleDeleteRow: (rowId:string) => void;
 }
 
-export const columns = ({handleUpdateModal,handleDeleteRow}: ColumnProps): ColumnDef<Supplier>[] => 
+export const columns = ({handleUpdateModal,handleDeleteRow}: ColumnProps): ColumnDef<SupplierStorageDetail>[] => 
 {
   
 return [
@@ -44,30 +44,44 @@ return [
   },
   {
     accessorKey: "id",
+    header: "Id",
+    
+  },
+  {
+    accessorKey: "stockId",
     header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Tedarikçi kodu
+            Stok kodu
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
       },
   },
   {
-    accessorKey: "name",
-    header: "Tedarikçi Adı",
+    accessorKey: "rawMaterialId",
+    header: "Hammadde Kodu",
   },
   {
-    accessorKey:"phone",
-    header:"Telefon"
+    accessorKey: "rawMaterialName",
+    header: "Hammadde Adı",
+  },
+  {
+    accessorKey: "stockWeight",
+    header: "Ağırlık",
+    
+  },
+  {
+    accessorKey: "stockCount",
+    header: "Adet",
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const model = row.original
+      const storage = row.original
      
       return (
         
@@ -80,14 +94,14 @@ return [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(model.id)}
+              onClick={() => navigator.clipboard.writeText(storage.stockId)}
             >
-              Tedarikçi Kodu Kopyala
+              Stok Kodu Kopyala
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={()=>handleUpdateModal(model.id)}>Düzenle</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>handleUpdateModal(storage.id.toString())}>Düzenle</DropdownMenuItem>
             <DropdownMenuItem
-              onClick={()=> handleDeleteRow(model.id)}
+              onClick={()=> handleDeleteRow(storage.stockId)}
             >Sil</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

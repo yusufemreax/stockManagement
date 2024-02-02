@@ -1,12 +1,16 @@
 "use client";
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useEffect } from "react";
+import { Switch } from "./switch";
+import { Label } from "./label";
 
 interface ModalProps{
     title: string;
     description: string;
     isOpen: boolean;
     onClose: () => void;
+    onOpen: () => void;
     children?: React.ReactNode;
 };
 export const Modal: React.FC<ModalProps> =({
@@ -14,8 +18,14 @@ export const Modal: React.FC<ModalProps> =({
     description,
     isOpen,
     onClose,
+    onOpen,
     children
 })=>{
+    useEffect(()=>{
+        if(isOpen){
+            onOpen();
+        }
+    },[isOpen])
     const onChange=(open: boolean)=>{
         if(!open){
             onClose();

@@ -12,10 +12,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+import * as React from "react"
+interface ColumnProps{
+  handleUpdateModal: (rowId:string | undefined) => void;
+  handleDeleteRow: (rowId:string) => void;
+}
 
-export const columns: ColumnDef<Storage>[] = [
+export const columns = ({handleUpdateModal,handleDeleteRow}: ColumnProps): ColumnDef<Stock>[] => 
+{
+  
+return [
   {
     id: "select",
     header: ({ table }) => (
@@ -37,18 +43,22 @@ export const columns: ColumnDef<Storage>[] = [
     ),
   },
   {
-    accessorKey: "stock_Kod",
+    accessorKey: "id",
     header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Hammadde kodu
+            Stok kodu
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
       },
+  },
+  {
+    accessorKey: "rawMaterialId",
+    header: "Hammadde Kodu",
   },
   {
     accessorKey: "rawMaterialName",
@@ -57,6 +67,7 @@ export const columns: ColumnDef<Storage>[] = [
   {
     accessorKey: "stock_Kg",
     header: "Ağırlık",
+    
   },
   {
     accessorKey: "stock_Count",
@@ -64,17 +75,11 @@ export const columns: ColumnDef<Storage>[] = [
   },
   {
     id: "actions",
-    header:({column})=>{
-      return(
-        <Button variant={"outline"} size="icon">
-          <PlusIcon className="w-4 h-4" />
-        </Button>
-      )
-    },
     cell: ({ row }) => {
       const storage = row.original
- 
+     
       return (
+        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -84,16 +89,19 @@ export const columns: ColumnDef<Storage>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(storage.rawMaterialID)}
+              onClick={() => navigator.clipboard.writeText(storage.id)}
             >
-              Hammadde Kodu Kopyala
+              Stok Kodu Kopyala
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Düzenle</DropdownMenuItem>
-            <DropdownMenuItem>Sil</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>handleUpdateModal(storage.id)}>Düzenle</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={()=> handleDeleteRow(storage.id)}
+            >Sil</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
     },
   },
 ]
+}

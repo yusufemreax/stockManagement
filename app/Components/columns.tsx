@@ -18,7 +18,7 @@ interface ColumnProps{
   handleDeleteRow: (rowId:string) => void;
 }
 
-export const columns = ({handleUpdateModal,handleDeleteRow}: ColumnProps): ColumnDef<Supplier>[] => 
+export const columns = ({handleUpdateModal,handleDeleteRow}: ColumnProps): ColumnDef<Component>[] => 
 {
   
 return [
@@ -50,7 +50,7 @@ return [
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Tedarikçi kodu
+            Parça kodu
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
@@ -58,16 +58,17 @@ return [
   },
   {
     accessorKey: "name",
-    header: "Tedarikçi Adı",
+    header: "Parça Adı",
+    
   },
   {
-    accessorKey:"phone",
-    header:"Telefon"
+    accessorKey:"productionDays",
+    header:"Üretim Günü"
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const model = row.original
+      const item = row.original
      
       return (
         
@@ -80,14 +81,14 @@ return [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(model.id)}
+              onClick={() => navigator.clipboard.writeText(item.id)}
             >
-              Tedarikçi Kodu Kopyala
+              Parça Kodu Kopyala
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={()=>handleUpdateModal(model.id)}>Düzenle</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>handleUpdateModal(item.id)}>Düzenle</DropdownMenuItem>
             <DropdownMenuItem
-              onClick={()=> handleDeleteRow(model.id)}
+              onClick={()=> handleDeleteRow(item.id)}
             >Sil</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

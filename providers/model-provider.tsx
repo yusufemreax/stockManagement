@@ -1,10 +1,9 @@
 "use client";
-import { RawMaterialModal } from "@/components/modals/rawMaterial-modal";
 import { useState,useEffect } from "react";
 
 export const ModalProvider = ()=>{
     const [isMounted, setIsMounted] = useState(false)
-    const [modalData, setModalData] = useState(null);
+    const [id, setId] = useState<string>()
     useEffect(()=>{
         setIsMounted(true)
     },[])
@@ -13,7 +12,7 @@ export const ModalProvider = ()=>{
     }
     return(
         <>
-            <RawMaterialModal modalData={modalData}/>
+            
         </>
     )
 }

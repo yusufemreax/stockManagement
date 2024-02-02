@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal, Plus, PlusIcon } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
-  DropdownMenu,
+  DropdownMenu, 
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -18,7 +18,7 @@ interface ColumnProps{
   handleDeleteRow: (rowId:string) => void;
 }
 
-export const columns = ({handleUpdateModal,handleDeleteRow}: ColumnProps): ColumnDef<Supplier>[] => 
+export const columns = ({handleUpdateModal,handleDeleteRow}: ColumnProps): ColumnDef<ProductionDetail>[] => 
 {
   
 return [
@@ -50,24 +50,36 @@ return [
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Tedarikçi kodu
+            Üretim Kodu
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
       },
   },
   {
-    accessorKey: "name",
-    header: "Tedarikçi Adı",
+    accessorKey: "date",
+    header: "Gelmesi Beklenen Tarih",
   },
   {
-    accessorKey:"phone",
-    header:"Telefon"
+    accessorKey: "componentId",
+    header: "Parça Kodu",
+  },
+  {
+    accessorKey: "componentName",
+    header: "Parça Adı",
+  },
+  {
+    accessorKey:"componentCount",
+    header:"Parça sayısı"
+  },
+  {
+    accessorKey:"supplierName",
+    header:"Tedarikçi"
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const model = row.original
+      const storage = row.original
      
       return (
         
@@ -80,14 +92,19 @@ return [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(model.id)}
+              onClick={() => navigator.clipboard.writeText(storage.id)}
             >
-              Tedarikçi Kodu Kopyala
+              Üretim Kodu Kopyala
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(storage.componentId)}
+            >
+              Parça Kodu Kopyala
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={()=>handleUpdateModal(model.id)}>Düzenle</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>handleUpdateModal(storage.id)}>Düzenle</DropdownMenuItem>
             <DropdownMenuItem
-              onClick={()=> handleDeleteRow(model.id)}
+              onClick={()=> handleDeleteRow(storage.id)}
             >Sil</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,15 +1,12 @@
 "use client"
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   ColumnDef,
-  ColumnFiltersState,
   SortingState,
   flexRender,
   getPaginationRowModel,
   getCoreRowModel,
-  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
   VisibilityState,
@@ -24,25 +21,20 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-interface DataTableProps<TData, TValue> {
+interface ModalDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  handleOpenModal: (rowId:string | undefined)=>void;
-  handleDeleteRows: (rowIds: string[]) => void;
+  handleDeleteRows?: (rowIds: string[]) => void;
   handleAddMany?: () => void;
 }
 
-export function DataTable<TData, TValue>({
+export function ModalDataTable<TData, TValue>({
   columns,
   data,
-  handleOpenModal,
   handleDeleteRows,
   handleAddMany
-}: DataTableProps<TData, TValue>) {
+}: ModalDataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-      []
-    )
     const [rowSelection, setRowSelection] = React.useState({})
     const table = useReactTable({
         data,
@@ -51,12 +43,9 @@ export function DataTable<TData, TValue>({
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         onRowSelectionChange: setRowSelection,
-        onColumnFiltersChange: setColumnFilters,
-        getFilteredRowModel: getFilteredRowModel(),
         state: {
             sorting,
             rowSelection,
-            columnFilters,
         },
     getPaginationRowModel: getPaginationRowModel(),
   })
@@ -65,14 +54,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex items-center justify-start space-x-2 py-4">
-        <Button 
-          variant="outline"
-          size = "sm"
-          onClick={() => {
-            handleOpenModal(undefined);
-          }}
-        >Yeni Ekle</Button>
-        <Button 
+        {/* <Button 
           variant="outline"
           size = "sm"
           onClick={handleAddMany}
@@ -83,19 +65,12 @@ export function DataTable<TData, TValue>({
           size = "sm"
           disabled = {!(table.getFilteredSelectedRowModel().rows.length > 0)}
           onClick={() => {
-            handleDeleteRows(table.getFilteredSelectedRowModel().rows.map(row => (row.original as any).id.toString()));
+            if(handleDeleteRows){
+              handleDeleteRows(table.getFilteredSelectedRowModel().rows.map(row => (row.original as any).id.toString()));
+            }
           }}
-        >Seçili Olanları Sil</Button>
-        <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div>
+        >Seçili Olanları Sil</Button> */}
+        
       </div>
       <div className="rounded-md border">
         <Table>
@@ -104,31 +79,15 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-        //             <TableHead key={header.id}>
-        //   {header.isPlaceholder ? null : (
-        //     <div className="flex flex-col space-y-2 justify-start">
-        //       {flexRender(header.column.columnDef.header, header.getContext())}
-        //       <Input
-        //         placeholder={`Filter ${header.column.columnDef.header}`}
-        //         value={
-        //           (table.getColumn(header.id)?.getFilterValue() as string) ?? ""
-        //         }
-        //         onChange={(event) =>
-        //           table.getColumn(header.id)?.setFilterValue(event.target.value)
-        //         }
-        //         className="max-w-20"
-        //       />
-        //     </div>
-        //   )}
-        // </TableHead>
+                    <TableHead key={header.id} >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+
+                    </TableHead>
                   )
                 })}
               </TableRow>
@@ -142,7 +101,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className="max-w-48 overflow-hidden text-ellipsis whitespace-nowrap text-center" key={cell.id}>
+                    <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

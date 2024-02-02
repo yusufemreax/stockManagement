@@ -12,13 +12,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+import * as React from "react"
+import { Label } from "@/components/ui/label"
 interface ColumnProps{
-  handleModalSubmit: () => void;
+  handleUpdateModal: (rowId:string | undefined) => void;
+  handleDeleteRow: (rowId:string) => void;
 }
-export const columns = ({handleModalSubmit}: ColumnProps): ColumnDef<RawMaterial>[] => 
+
+export const columns = ({handleUpdateModal,handleDeleteRow}: ColumnProps): ColumnDef<RawMaterial>[] => 
 {
+  
 return [
   {
     id: "select",
@@ -60,38 +63,39 @@ return [
   },
   {
     accessorKey: "sizeType",
-    header: "Ağırlık İle",
+    header: "Birim Türü",
     cell:({row}) =>{
       const value:boolean = Boolean(row.getValue('sizeType'));
       return(
-        <Checkbox
-          checked= {!value}
-        />
-      )
-    }
-  },
-  {
-    accessorKey: "sizeType",
-    header: "Ağırlık İle",
-    cell:({row}) =>{
-      const value:boolean = Boolean(row.getValue('sizeType'));
-      return(
-        <Checkbox
-          checked= {value}
-        />
+        value ? (
+          <Label>ADET</Label>
+        ) : (
+          <Label>KG</Label>
+        )
       )
     }
   },
   {
     accessorKey:"type",
-    header:"Tip"
+    header:"Tip",
+    cell:({row}) =>{
+      const value:string = row.getValue('type');
+      return(
+        value === "Direct" ? (
+          <Label>Direk</Label>
+        ) : (
+          <Label>Üretim İle</Label>
+        )
+      )
+    }
   },
   {
     id: "actions",
     cell: ({ row }) => {
       const storage = row.original
- 
+     
       return (
+        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -106,8 +110,10 @@ return [
               Hammadde Kodu Kopyala
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Düzenle</DropdownMenuItem>
-            <DropdownMenuItem>Sil</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>handleUpdateModal(storage.id)}>Düzenle</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={()=> handleDeleteRow(storage.id)}
+            >Sil</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
