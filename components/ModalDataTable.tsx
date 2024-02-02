@@ -3,10 +3,12 @@ import * as React from "react"
 import { Button } from "@/components/ui/button"
 import {
   ColumnDef,
+  ColumnFiltersState,
   SortingState,
   flexRender,
   getPaginationRowModel,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
   VisibilityState,
@@ -20,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Input } from "./ui/input"
 
 interface ModalDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -36,15 +39,21 @@ export function ModalDataTable<TData, TValue>({
 }: ModalDataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [rowSelection, setRowSelection] = React.useState({})
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+      []
+    )
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
         onRowSelectionChange: setRowSelection,
         state: {
             sorting,
+            columnFilters,
             rowSelection,
         },
     getPaginationRowModel: getPaginationRowModel(),
@@ -74,25 +83,40 @@ export function ModalDataTable<TData, TValue>({
       </div>
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+        <TableHeader>
+  {table.getHeaderGroups().map((headerGroup) => (
+    <>
+      <TableRow key={headerGroup.id}>
+        {headerGroup.headers.map((header) => {
+          return (
+            <TableHead key={header.id}>
+              {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+            </TableHead>
+          );
+        })}
+      </TableRow>
+      <TableRow> {/* Yeni eklenen satır */}
+        {headerGroup.headers.map((header) => (
+          <TableHead key={`${header.id}-I`}>
+            {header.isPlaceholder ? null : (
+              <>
+                { header.column.getCanFilter() &&
+                  <Input
+                    value={(header.column.getFilterValue() as string) ?? ""}
+                    placeholder="Filtre"
+                    onChange={(event) =>
+                      header.column.setFilterValue(event.target.value)
+                    }
+                />}
+              </>
+            )}
+          </TableHead>
+        ))}
+      </TableRow>
+    </>
+  ))}
+</TableHeader>
 
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
