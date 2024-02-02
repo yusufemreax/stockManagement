@@ -22,6 +22,7 @@ import { Switch } from "../ui/switch";
 import { DateRange } from "react-day-picker";
 import { Combobox } from "../Combobox";
 import { ScrollArea } from "../ui/scroll-area";
+import { SidePop } from "../ModalSheet";
 
 const agent = new https.Agent({  
     rejectUnauthorized: false
@@ -322,7 +323,7 @@ export const ManyProductionModal: React.FC<ManyProductionModalProps> = (props) =
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="flex space-y-2">
-                            <Sheet>
+                            {/* <Sheet>
                                 <SheetTrigger >Üretilecek Parçaları Düzenlemek için Tıklayınız</SheetTrigger>
                                 <SheetContent className="w-[700px] overflow-hidden">
                                     <SheetHeader>
@@ -335,7 +336,14 @@ export const ManyProductionModal: React.FC<ManyProductionModalProps> = (props) =
                                         <ModalDataTable columns={columns} data={tableComponents}/> 
                                     </ScrollArea>
                                 </SheetContent>
-                            </Sheet>
+                            </Sheet> */}
+                            <SidePop 
+                                modalColumns={columns} 
+                                data={tableComponents} 
+                                title="Parçalar" 
+                                description="Üretilecek Parçaları giriniz." 
+                                triggerText="Üretilecek Parçaları Düzenlemek için Tıklayınız"
+                            />
                         </div>
                         <Separator className="my-4"/>
                         <div className="flex space-x-4 w-full justify-between">
